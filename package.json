@@ -1,5 +1,5 @@
 {
-  "name": "longterm_queue_test",
+  "name": "longterm-queue-test",
   "version": "0.0.0",
   "description": "Tests for longterm queue modules",
   "main": "tests.js",
