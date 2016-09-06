@@ -1,0 +1,23 @@
+{
+  "name": "longterm_queue_test",
+  "version": "0.0.0",
+  "description": "Tests for longterm queue modules",
+  "main": "tests.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChemicalRocketeer/longterm_queue_test.git"
+  },
+  "keywords": [
+    "longterm",
+    "test"
+  ],
+  "author": "ChemicalRocketeer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChemicalRocketeer/longterm_queue_test/issues"
+  },
+  "homepage": "https://github.com/ChemicalRocketeer/longterm_queue_test#readme"
+}
