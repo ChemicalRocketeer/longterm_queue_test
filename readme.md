@@ -4,7 +4,7 @@ Tests are run via [mocha](https://mochajs.org/).
 
 ## Example
 ``` js  
-var MongoQueue = require('longterm-mongo-queue');
+var MyCustomQueue = require('longterm-mongo-queue');
 var longtermTest = require('longterm-queue-test');
-longtermTest(MongoQueue);
+longtermTest(MyCustomQueue, 'My Queue');
 ```

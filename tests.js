@@ -2,8 +2,10 @@ var chai = require('chai');
 var expect = chai.expect;
 var async = require('async');
 
-module.exports = function(Queue) {
-  describe('Queue', function() {
+module.exports = function(Queue, title) {
+  if (!title) title = 'Queue';
+
+  describe(title, function() {
 
     var queue;
 
