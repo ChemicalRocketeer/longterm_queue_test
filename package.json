@@ -19,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/ChemicalRocketeer/longterm_queue_test/issues"
   },
-  "homepage": "https://github.com/ChemicalRocketeer/longterm_queue_test#readme"
+  "homepage": "https://github.com/ChemicalRocketeer/longterm_queue_test#readme",
+  "dependencies": {
+    "async": "^2.0.1",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
+  }
 }
