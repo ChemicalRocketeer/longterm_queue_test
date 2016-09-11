@@ -16,15 +16,17 @@ module.exports = function(Queue, title) {
     }
 
     describe('enqueue', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should return the event information', function(done) {
         var now = Date.now();
         queue.enqueue(now, {data: 'x'}, function(err, item) {
+          expect(err).to.not.exist;
           expect(item).to.exist;
-          expect(item).to.have.all.keys('id', 'when', 'data');
+          expect(item).to.contain.all.keys('id', 'when', 'data');
           expect(item.data).to.deep.equal({data: 'x'});
           done();
         });
@@ -32,15 +34,17 @@ module.exports = function(Queue, title) {
     })
 
     describe('peek', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       var asyncPeek = function(expected, remove) {
         return function(callback) {
           queue.peek(function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.exist;
-            expect(item).to.have.all.keys('id', 'when', 'data');
+            expect(item).to.contain.all.keys('id', 'when', 'data');
             expect(item.data).to.deep.equal(expected);
             if (item && remove) {
               queue.remove(item.id, function() {
@@ -56,9 +60,11 @@ module.exports = function(Queue, title) {
       it('should find an event if there is one', function(done) {
         var now = Date.now();
         queue.enqueue(now, {data: 'dat'}, function(err, item) {
+          expect(err).to.not.exist;
           queue.peek(function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.exist;
-            expect(item).to.have.all.keys('id', 'when', 'data');
+            expect(item).to.contain.all.keys('id', 'when', 'data');
             expect(item.data).to.deep.equal({data: 'dat'});
             done();
           })
@@ -67,6 +73,7 @@ module.exports = function(Queue, title) {
 
       it('should return null if there are no events', function(done) {
         queue.peek(function(err, item) {
+          expect(err).to.not.exist;
           expect(item).to.be.null;
           done();
         });
@@ -88,16 +95,20 @@ module.exports = function(Queue, title) {
     });
 
     describe('update', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should change the event persistently', function(done) {
         queue.enqueue(Date.now(), {data: 'foo'}, function(err, item) {
+          expect(err).to.not.exist;
           queue.update(item.id, {change: 'bar'}, function(err, item) {
+            expect(err).to.not.exist;
             queue.find(item.id, function(err, item) {
+              expect(err).to.not.exist;
               expect(item).to.exist;
-              expect(item).to.have.all.keys('id', 'when', 'data');
+              expect(item).to.contain.all.keys('id', 'when', 'data');
               expect(item.data).to.deep.equal({change: 'bar'});
               done();
             });
@@ -107,9 +118,11 @@ module.exports = function(Queue, title) {
 
       it('should return the modified event', function(done) {
         queue.enqueue(Date.now(), {data: 'foo'}, function(err, item) {
+          expect(err).to.not.exist;
           queue.update(item.id, {change: 'bar'}, function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.exist;
-            expect(item).to.have.all.keys('id', 'when', 'data');
+            expect(item).to.contain.all.keys('id', 'when', 'data');
             expect(item.data).to.deep.equal({change: 'bar'});
             done();
           });
@@ -118,6 +131,7 @@ module.exports = function(Queue, title) {
 
       it('should return null if the event does not exist', function(done) {
         queue.update('nope', {data: 'oh the huge manatee'}, function(err, item) {
+          expect(err).to.not.exist;
           expect(item).to.be.null;
           done();
         });
@@ -125,8 +139,9 @@ module.exports = function(Queue, title) {
     });
 
     describe('remove', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should remove the correct item', function(done){
@@ -137,8 +152,10 @@ module.exports = function(Queue, title) {
           asyncEnq(now + 1000, {c: 'c'}),
         ], function(err, results) {
           queue.remove(results[1].id, function(err, count) {
+            expect(err).to.not.exist;
             expect(count).to.equal(1);
             queue.find(results[1].id, function(err, item) {
+              expect(err).to.not.exist;
               expect(item).not.to.exist;
               done();
             });
@@ -154,9 +171,11 @@ module.exports = function(Queue, title) {
           asyncEnq(now + 1000, {c: 'c'}),
         ], function(err, results) {
           queue.remove(-474395657, function(err, count) {
+            expect(err).to.not.exist;
             expect(count).to.equal(0);
             async.each(results, function(result, callback) {
               queue.find(result.id, function(err, item) {
+                expect(err).to.not.exist;
                 expect(item).to.exist;
                 callback();
               });
@@ -167,6 +186,7 @@ module.exports = function(Queue, title) {
 
       it('should do nothing if there are no items', function(done){
         queue.remove(0, function(err, count) {
+          expect(err).to.not.exist;
           expect(count).to.equal(0);
           done();
         });
@@ -174,8 +194,9 @@ module.exports = function(Queue, title) {
     });
 
     describe('find', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should find the correct item', function(done){
@@ -186,8 +207,9 @@ module.exports = function(Queue, title) {
           asyncEnq(now + 1000, {c: 'c'}),
         ], function(err, results) {
           queue.find(results[1].id, function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.exist;
-            expect(item).to.have.all.keys('id', 'when', 'data');
+            expect(item).to.contain.all.keys('id', 'when', 'data');
             expect(item.data).to.deep.equal({b: 'b'});
             done();
           });
@@ -197,6 +219,7 @@ module.exports = function(Queue, title) {
       it('should send null if the item does not exist', function(done){
         queue.enqueue(Date.now(), {data: 'dat'}, function(err, item) {
           queue.find(-893623618, function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.be.null;
             done();
           });
@@ -205,6 +228,7 @@ module.exports = function(Queue, title) {
 
       it('should send null if there are no items', function(done){
         queue.find(-893623618, function(err, item) {
+          expect(err).to.not.exist;
           expect(item).to.be.null;
           done();
         });
@@ -212,8 +236,9 @@ module.exports = function(Queue, title) {
     });
 
     describe('count', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should return the correct number', function(done) {
@@ -224,6 +249,7 @@ module.exports = function(Queue, title) {
           asyncEnq(now + 1000, {c: 'c'}),
         ], function(err, results) {
           queue.count(function(err, count) {
+            expect(err).to.not.exist;
             expect(count).to.equal(3);
             done();
           });
@@ -232,6 +258,7 @@ module.exports = function(Queue, title) {
 
       it('should return 0 on an empty queue', function(done) {
         queue.count(function(err, count) {
+          expect(err).to.not.exist;
           expect(count).to.equal(0);
           done();
         });
@@ -239,8 +266,9 @@ module.exports = function(Queue, title) {
     });
 
     describe('clear', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         queue = new Queue();
+        queue.clear(done);
       });
 
       it('should clear the queue', function(done) {
@@ -251,10 +279,13 @@ module.exports = function(Queue, title) {
           asyncEnq(now + 1000, {c: 'c'}),
         ], function(err, results) {
           queue.clear(function(err, count) {
+            expect(err).to.not.exist;
             expect(count).to.equal(3);
             queue.peek(function(err, item) {
+              expect(err).to.not.exist;
               expect(item).to.not.exist;
               queue.count(function(err, count) {
+                expect(err).to.not.exist;
                 expect(count).to.equal(0);
                 done();
               })
@@ -265,10 +296,13 @@ module.exports = function(Queue, title) {
 
       it('should do nothing with an empty queue', function(done) {
         queue.clear(function(err, count) {
+          expect(err).to.not.exist;
           expect(count).to.equal(0);
           queue.peek(function(err, item) {
+            expect(err).to.not.exist;
             expect(item).to.not.exist;
             queue.count(function(err, count) {
+              expect(err).to.not.exist;
               expect(count).to.equal(0);
               done();
             })
